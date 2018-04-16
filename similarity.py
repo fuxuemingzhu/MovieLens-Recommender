@@ -1,0 +1,81 @@
+# -*- coding = utf-8 -*-
+"""
+Calculate user similarity matrix.
+
+Created on 2018-04-15
+
+@author: fuxuemingzhu
+"""
+import collections
+
+import math
+
+from collections import defaultdict
+
+from utils import LogTime
+
+
+def calculate_user_similarity(trainset):
+    """
+    Calculate user similarity matrix by building movie-users inverse table.
+    The calculating will only between users which have common items votes.
+
+    :rtype: object
+    :param trainset: trainset
+    :return: similarity matrix
+    """
+    # build inverse table for item-users
+    # key=movieID, value=list of userIDs who have seen this movie
+    print('building movie-users inverse table...')
+    movie2users = collections.defaultdict(set)
+    movie_popular = defaultdict(int)
+
+    for user, movies in trainset.items():
+        for movie in movies:
+            movie2users[movie].add(user)
+            movie_popular[movie] += 1
+    print('building movie-users inverse table success.')
+
+    # save the total movie number, which will be used in evaluation
+    movie_count = len(movie2users)
+    print('total movie number = %d' % movie_count)
+
+    # count co-rated items between users
+    print('generate user co-rated movies similarity matrix...')
+    # the keys of usersim_mat are user1's id,
+    # the values of usersim_mat are dicts which save {user2's id: co-occurrence times}.
+    # so you can seem usersim_mat as a two-dim table.
+    usersim_mat = {}
+    # record the calculate time has spent.
+    movie2users_time = LogTime(print_step=100000)
+    for movie, users in movie2users.items():
+        for user1 in users:
+            # set default similarity between user1 and other users equals zero
+            usersim_mat.setdefault(user1, defaultdict(int))
+            for user2 in users:
+                if user1 == user2:
+                    continue
+                # ignore the score they voted.
+                # user similarity matrix only focus on co-occurrence.
+                usersim_mat[user1][user2] += 1
+            # log steps and times.
+            movie2users_time.count_time()
+    print('generate user co-rated movies similarity matrix success.')
+    movie2users_time.finish()
+
+    # calculate user-user similarity matrix
+    print('calculate user-user similarity matrix...')
+    # record the calculate time has spent.
+    usersim_mat_time = LogTime(print_step=1000)
+    for user1, ralated_users in usersim_mat.items():
+        len_user1 = len(trainset[user1])
+        for user2, count in ralated_users.items():
+            len_user2 = len(trainset[user2])
+            # The similarity of user1 and user2 is len(common movies)/sqrt(len(user1 movies)* len(user2 movies)
+            usersim_mat[user1][user2] = count / math.sqrt(len_user1 * len_user2)
+            # log steps and times.
+        usersim_mat_time.count_time()
+
+    print('calculate user-user similarity matrix success.')
+    usersim_mat_time.finish()
+    return usersim_mat, movie_popular, movie_count
