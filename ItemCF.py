@@ -82,7 +82,6 @@ class ItemBasedCF:
             return
         # print('Recommend movies to user start...')
         watched_movies = self.trainset[user]
-        # record the calculate time has spent.
         for movie, rating in watched_movies.items():
             for related_movie, similarity_factor in sorted(self.movie_sim_mat[movie].items(),
                                                            key=itemgetter(1), reverse=True)[0:K]:
@@ -158,8 +157,8 @@ class ItemBasedCF:
             for movie, _ in rec_movies:
                 if movie in test_movies:
                     movies_recommend[user].append(movie)
-                    # log steps and times.
-                    predict_time.count_time()
+            # log steps and times.
+            predict_time.count_time()
         print('Predict scores success.')
         predict_time.finish()
         return movies_recommend

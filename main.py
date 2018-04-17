@@ -10,14 +10,16 @@ import utils
 from ItemCF import ItemBasedCF
 from UserCF import UserBasedCF
 from dataset import DataSet
+from random_pred import RandomPredict
 from utils import LogTime
 
 
 def run_model(model_name='UserCF', test_size=0.3, clean=False):
+    print('*' * 70)
+    print('This is %s model trained on %s with test_size = %.2f' % (model_type, dataset_name, test_size))
+    print('*' * 70 + '\n')
     model_manager = utils.ModelManager(dataset_name, test_size)
     try:
-        pre_test_size = model_manager.load_model('test_size')
-        assert pre_test_size == test_size
         trainset = model_manager.load_model('trainset')
         testset = model_manager.load_model('testset')
     except OSError:
@@ -32,6 +34,8 @@ def run_model(model_name='UserCF', test_size=0.3, clean=False):
         model = UserBasedCF()
     elif model_name == 'ItemCF':
         model = ItemBasedCF()
+    elif model_name == 'Random':
+        model = RandomPredict()
     else:
         raise ValueError('No model named' + model_name)
     model.fit(trainset)
@@ -51,7 +55,9 @@ if __name__ == '__main__':
     main_time = LogTime(words="Main Function")
     # dataset_name = 'ml-100k'
     dataset_name = 'ml-1m'
-    model_type = 'UserCF'
+    # model_type = 'UserCF'
     # model_type = 'ItemCF'
-    run_model(model_type, 0.1, False)
+    model_type = 'Random'
+    test_size = 0.1
+    run_model(model_type, test_size, False)
     main_time.finish()

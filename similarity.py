@@ -92,20 +92,7 @@ def calculate_item_similarity(trainset):
     :param trainset: trainset
     :return: similarity matrix
     """
-    # build inverse table for item-users
-    # key=movieID, value=list of userIDs who have seen this movie
-    movie_popular = defaultdict(int)
-    print('counting movies number and popularity...')
-
-    for user, movies in trainset.items():
-        for movie in movies:
-            # count item popularity
-            movie_popular[movie] += 1
-    print('counting movies number and popularity success.')
-
-    # save the total movie number, which will be used in evaluation
-    movie_count = len(movie_popular)
-    print('total movie number = %d' % movie_count)
+    movie_popular, movie_count = calculate_movie_popular(trainset)
 
     # count co-rated items between users
     print('generate items co-rated similarity matrix...')
@@ -148,3 +135,20 @@ def calculate_item_similarity(trainset):
     print('calculate item-item similarity matrix success.')
     movie_sim_mat_time.finish()
     return movie_sim_mat, movie_popular, movie_count
+
+
+def calculate_movie_popular(trainset):
+    movie_popular = defaultdict(int)
+    print('counting movies number and popularity...')
+
+    for user, movies in trainset.items():
+        for movie in movies:
+            # count item popularity
+            movie_popular[movie] += 1
+    print('counting movies number and popularity success.')
+
+    # save the total movie number, which will be used in evaluation
+    movie_count = len(movie_popular)
+    print('total movie number = %d' % movie_count)
+    return movie_popular, movie_count
+

@@ -1,13 +1,16 @@
-# -*- coding = utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
-User-based Collaborative filtering.
+@author: fuxuemingzhu 
+@contact: fuxuemingzhu@163.com
+@site: www.fuxuemingzhu.me
 
-Created on 2018-04-15
+@file: random_pred.py
+@time: 18-4-17 下午5:48
 
-@author: fuxuemingzhu
+Description : Recommend via Random Choice.
 """
-import collections
-from operator import itemgetter
+import random
 
 import math
 
@@ -15,80 +18,69 @@ from collections import defaultdict
 
 import similarity
 import utils
-from utils import LogTime
 
 
-class UserBasedCF:
+class RandomPredict:
     """
-    User-based Collaborative filtering.
+    Recommend via Random Choice.
     Top-N recommendation.
     """
 
-    def __init__(self, n_sim_user=20, n_rec_movie=10, save_model=True):
+    def __init__(self, n_rec_movie=10, save_model=True):
         """
-        Init UserBasedCF with n_sim_user and n_rec_movie.
+        Init RandomPredict with n_rec_movie.
         :return: None
         """
-        print("UserBasedCF start...\n")
-        self.n_sim_user = n_sim_user
+        print("RandomPredict start...\n")
         self.n_rec_movie = n_rec_movie
         self.trainset = None
         self.save_model = save_model
 
     def fit(self, trainset):
         """
-        Fit the trainset by calculate user similarity matrix.
+        Fit the trainset via count movies.
         :param trainset: train dataset
         :return: None
         """
         model_manager = utils.ModelManager()
         try:
-            self.user_sim_mat = model_manager.load_model('user_sim_mat')
             self.movie_popular = model_manager.load_model('movie_popular')
             self.movie_count = model_manager.load_model('movie_count')
             self.trainset = model_manager.load_model('trainset')
-            print('User similarity model has saved before.\nLoad model success...\n')
+            self.total_movies = model_manager.load_model('total_movies')
+            print('RandomPredict model has saved before.\nLoad model success...\n')
         except OSError:
             print('No model saved before.\nTrain a new model...')
-            self.user_sim_mat, self.movie_popular, self.movie_count = \
-                similarity.calculate_user_similarity(trainset=trainset)
             self.trainset = trainset
+            self.movie_popular, self.movie_count = similarity.calculate_movie_popular(trainset)
+            self.total_movies = list(self.movie_popular.keys())
             print('Train a new model success.')
             if self.save_model:
-                model_manager.save_model(self.user_sim_mat, 'user_sim_mat')
                 model_manager.save_model(self.movie_popular, 'movie_popular')
                 model_manager.save_model(self.movie_count, 'movie_count')
+                model_manager.save_model(self.total_movies, 'total_movies')
                 print('The new model has saved success.\n')
 
     def recommend(self, user):
         """
-        Find K similar users and recommend N movies for the user.
+        Random recommend N movies for the user.
         :param user: The user we recommend movies to.
         :return: the N best score movies
         """
-        if not self.user_sim_mat or not self.n_rec_movie or \
-                not self.trainset or not self.movie_popular or not self.movie_count:
-            raise NotImplementedError('UserCF has not init or fit method has not called yet.')
-        K = self.n_sim_user
+        if not self.n_rec_movie or not self.trainset or not self.movie_popular or not self.movie_count:
+            raise NotImplementedError('RandomPredict has not init or fit method has not called yet.')
         N = self.n_rec_movie
-        predict_score = collections.defaultdict(int)
+        predict_movies = list()
         if user not in self.trainset:
             print('The user (%s) not in trainset.' % user)
             return
-        # print('Recommend movies to user start...')
         watched_movies = self.trainset[user]
-        for similar_user, similarity_factor in sorted(self.user_sim_mat[user].items(),
-                                                      key=itemgetter(1), reverse=True)[0:K]:
-            for movie, rating in self.trainset[similar_user].items():
-                if movie in watched_movies:
-                    continue
-                # predict the user's "interest" for each movie
-                # the predict_score is sum(similarity_factor * rating)
-                predict_score[movie] += similarity_factor * rating
-                # log steps and times.
-        # print('Recommend movies to user success.')
-        # return the N best score movies
-        return sorted(predict_score.items(), key=itemgetter(1), reverse=True)[0:N]
+        # Random recommend N movies for the user.
+        while len(predict_movies) < N:
+            movie = random.choice(self.total_movies)
+            if movie not in watched_movies:
+                predict_movies.append(movie)
+        return predict_movies[:N]
 
     def test(self, testset):
         """
@@ -111,11 +103,11 @@ class UserBasedCF:
         popular_sum = 0
 
         # record the calculate time has spent.
-        test_time = LogTime(print_step=1000)
+        test_time = utils.LogTime(print_step=1000)
         for i, user in enumerate(self.trainset):
             test_movies = self.testset.get(user, {})
             rec_movies = self.recommend(user)  # type:list
-            for movie, _ in rec_movies:
+            for movie in rec_movies:
                 if movie in test_movies:
                     hit += 1
                 all_rec_movies.add(movie)
@@ -145,7 +137,7 @@ class UserBasedCF:
         movies_recommend = defaultdict(list)
         print('Predict scores start...')
         # record the calculate time has spent.
-        predict_time = LogTime(print_step=500)
+        predict_time = utils.LogTime(print_step=500)
         for i, user in enumerate(self.trainset):
             test_movies = testset.get(user, {})
             rec_movies = self.recommend(user)  # type:list
