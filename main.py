@@ -15,9 +15,9 @@ from random_pred import RandomPredict
 from utils import LogTime
 
 
-def run_model(model_name='UserCF', test_size=0.3, clean=False):
+def run_model(model_name, dataset_name, test_size=0.3, clean=False):
     print('*' * 70)
-    print('This is %s model trained on %s with test_size = %.2f' % (model_type, dataset_name, test_size))
+    print('This is %s model trained on %s with test_size = %.2f' % (model_name, dataset_name, test_size))
     print('*' * 70 + '\n')
     model_manager = utils.ModelManager(dataset_name, test_size)
     try:
@@ -56,12 +56,12 @@ def recommend_test(model, user_list):
 
 if __name__ == '__main__':
     main_time = LogTime(words="Main Function")
-    # dataset_name = 'ml-100k'
-    dataset_name = 'ml-1m'
+    dataset_name = 'ml-100k'
+    # dataset_name = 'ml-1m'
     # model_type = 'UserCF'
     # model_type = 'ItemCF'
     # model_type = 'Random'
     model_type = 'MostPopular'
     test_size = 0.1
-    run_model(model_type, test_size, False)
+    run_model(model_type, dataset_name, test_size, False)
     main_time.finish()

@@ -34,14 +34,6 @@ BUILTIN_DATASETS = {
                                rating_scale=(1, 5),
                                sep='::')
         ),
-    'jester' :
-        BuiltinDataset(
-            url='http://eigentaste.berkeley.edu/dataset/jester_dataset_2.zip',
-            path='data/jester/jester_ratings.dat',
-            sep='\t\t',
-            reader_params=dict(line_format='user item rating',
-                               rating_scale=(-10, 10))
-        )
 }
 
 # modify the random seed will change dataset spilt.
@@ -99,7 +91,7 @@ class DataSet:
         :return: tuple: User id, item id, rating score.
                 The timestamp will be ignored cause it wasn't used in Collaborative filtering.
         """
-        user, movie, rate, _ = line.strip('\r\n').split(sep)
+        user, movie, rate = line.strip('\r\n').split(sep)[:4]
         return user, movie, rate
 
     @classmethod

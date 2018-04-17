@@ -93,7 +93,7 @@ class ItemBasedCF:
                 # log steps and times.
         # print('Recommend movies to user success.')
         # return the N best score movies
-        return sorted(predict_score.items(), key=itemgetter(1), reverse=True)[0:N]
+        return [movie for movie, _ in sorted(predict_score.items(), key=itemgetter(1), reverse=True)[0:N]]
 
     def test(self, testset):
         """
@@ -120,7 +120,7 @@ class ItemBasedCF:
         for i, user in enumerate(self.trainset):
             test_movies = self.testset.get(user, {})
             rec_movies = self.recommend(user)  # type:list
-            for movie, _ in rec_movies:
+            for movie in rec_movies:
                 if movie in test_movies:
                     hit += 1
                 all_rec_movies.add(movie)

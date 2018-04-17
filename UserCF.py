@@ -88,7 +88,7 @@ class UserBasedCF:
                 # log steps and times.
         # print('Recommend movies to user success.')
         # return the N best score movies
-        return sorted(predict_score.items(), key=itemgetter(1), reverse=True)[0:N]
+        return [movie for movie, _ in sorted(predict_score.items(), key=itemgetter(1), reverse=True)[0:N]]
 
     def test(self, testset):
         """
@@ -115,7 +115,7 @@ class UserBasedCF:
         for i, user in enumerate(self.trainset):
             test_movies = self.testset.get(user, {})
             rec_movies = self.recommend(user)  # type:list
-            for movie, _ in rec_movies:
+            for movie in rec_movies:
                 if movie in test_movies:
                     hit += 1
                 all_rec_movies.add(movie)
@@ -136,24 +136,24 @@ class UserBasedCF:
         print('precision=%.4f\trecall=%.4f\tcoverage=%.4f\tpopularity=%.4f\n' %
               (precision, recall, coverage, popularity))
 
-    def predict(self, testset):
-        """
-        Predict scores of movies to all users in testset.
-        :param testset: test dataset
-        :return: `dict` : recommend list for each user.
-        """
-        movies_recommend = defaultdict(list)
-        print('Predict scores start...')
-        # record the calculate time has spent.
-        predict_time = LogTime(print_step=500)
-        for i, user in enumerate(self.trainset):
-            test_movies = testset.get(user, {})
-            rec_movies = self.recommend(user)  # type:list
-            for movie, _ in rec_movies:
-                if movie in test_movies:
-                    movies_recommend[user].append(movie)
-            # log steps and times.
-            predict_time.count_time()
-        print('Predict scores success.')
-        predict_time.finish()
-        return movies_recommend
+        def predict(self, testset):
+            """
+            Predict scores of movies to all users in testset.
+            :param testset: test dataset
+            :return: `dict` : recommend list for each user.
+            """
+            movies_recommend = defaultdict(list)
+            print('Predict scores start...')
+            # record the calculate time has spent.
+            predict_time = LogTime(print_step=500)
+            for i, user in enumerate(self.trainset):
+                test_movies = testset.get(user, {})
+                rec_movies = self.recommend(user)  # type:list
+                for movie, _ in rec_movies:
+                    if movie in test_movies:
+                        movies_recommend[user].append(movie)
+                # log steps and times.
+                predict_time.count_time()
+            print('Predict scores success.')
+            predict_time.finish()
+            return movies_recommend
