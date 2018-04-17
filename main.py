@@ -13,31 +13,30 @@ from dataset import DataSet
 from utils import LogTime
 
 
-def run_model(model_name='UserCF', clean=False):
-    model_manager = utils.ModelManager(dataset_name)
+def run_model(model_name='UserCF', test_size=0.3, clean=False):
+    model_manager = utils.ModelManager(dataset_name, test_size)
     try:
-        train = model_manager.load_model('trainset')
-        test = model_manager.load_model('testset')
+        pre_test_size = model_manager.load_model('test_size')
+        assert pre_test_size == test_size
+        trainset = model_manager.load_model('trainset')
+        testset = model_manager.load_model('testset')
     except OSError:
         ratings = DataSet.load_dataset(name=dataset_name)
-        train, test = DataSet.train_test_split(ratings, test_size=0.3)
-        model_manager.save_model(train, 'trainset')
-        model_manager.save_model(test, 'testset')
+        trainset, testset = DataSet.train_test_split(ratings, test_size=test_size)
+        model_manager.save_model(trainset, 'trainset')
+        model_manager.save_model(testset, 'testset')
     '''Do you want to clean workspace and retrain model again?'''
     '''if you want to change test_size or retrain model, please set clean_workspace True'''
     model_manager.clean_workspace(clean)
     if model_name == 'UserCF':
-        usercf = UserBasedCF()
-        usercf.fit(train)
-        recommend_test(usercf, [1, 100, 233, 666, 888])
-        usercf.test(test)
+        model = UserBasedCF()
     elif model_name == 'ItemCF':
-        itemcf = ItemBasedCF()
-        itemcf.fit(train)
-        recommend_test(itemcf, [1, 100, 233, 666, 888])
-        itemcf.test(test)
+        model = ItemBasedCF()
     else:
         raise ValueError('No model named' + model_name)
+    model.fit(trainset)
+    recommend_test(model, [1, 100, 233, 666, 888])
+    model.test(testset)
 
 
 def recommend_test(model, user_list):
@@ -50,8 +49,9 @@ def recommend_test(model, user_list):
 
 if __name__ == '__main__':
     main_time = LogTime(words="Main Function")
-    dataset_name = 'ml-100k'
+    # dataset_name = 'ml-100k'
+    dataset_name = 'ml-1m'
     model_type = 'UserCF'
     # model_type = 'ItemCF'
-    run_model(model_type, False)
+    run_model(model_type, 0.1, False)
     main_time.finish()

@@ -14,7 +14,20 @@ import shutil
 
 
 class LogTime:
+    """
+    Time used help.
+    You can use count_time() in for-loop to count how many times have looped.
+    Call finish() when your for-loop work finish.
+    WARNING: Consider in multi-for-loop, call count_time() too many times will slow the speed down.
+            So, use count_time() in the most outer for-loop are preferred.
+    """
+
     def __init__(self, print_step=20000, words=''):
+        """
+        How many steps to print a progress log.
+        :param print_step: steps to print a progress log.
+        :param words: help massage
+        """
         self.proccess_count = 0
         self.PRINT_STEP = print_step
         # record the calculate time has spent.
@@ -23,6 +36,10 @@ class LogTime:
         self.total_time = 0.0
 
     def count_time(self):
+        """
+        Called in for-loop.
+        :return:
+        """
         # log steps and times.
         if self.proccess_count % self.PRINT_STEP == 0:
             curr_time = time.time()
@@ -31,6 +48,10 @@ class LogTime:
         self.proccess_count += 1
 
     def finish(self):
+        """
+        Work finished! Congratulations!
+        :return:
+        """
         print('total %s step number is %d' % (self.words, self.get_curr_step()))
         print('total %.2f seconds have spent\n' % self.get_total_time())
 
@@ -48,16 +69,16 @@ class ModelManager:
     """
     # This dataset_name belongs to the whole class.
     # So it should be init for only once.
-    dataset_name = None
+    path_name = ''
 
     @classmethod
-    def __init__(cls, dataset_name=None):
+    def __init__(cls, dataset_name=None, test_size=0.3):
         """
         cls.dataset_name should only init for only once.
         :param dataset_name:
         """
-        if not cls.dataset_name:
-            cls.dataset_name = dataset_name
+        if not cls.path_name:
+            cls.path_name = "model/" + dataset_name + '-testsize' + str(test_size)
 
     def save_model(self, model, save_name: str):
         """
@@ -70,7 +91,7 @@ class ModelManager:
             save_name += '.pkl'
         if not os.path.exists('model'):
             os.mkdir('model')
-        pickle.dump(model, open("model/" + self.dataset_name + "-%s" % save_name, "wb"))
+        pickle.dump(model, open(self.path_name + "-%s" % save_name, "wb"))
 
     def load_model(self, model_name: str):
         """
@@ -80,9 +101,9 @@ class ModelManager:
         """
         if 'pkl' not in model_name:
             model_name += '.pkl'
-        if not os.path.exists("model/" + self.dataset_name + "-%s" % model_name):
+        if not os.path.exists(self.path_name + "-%s" % model_name):
             raise OSError('There is no model named %s in model/ dir' % model_name)
-        return pickle.load(open("model/" + self.dataset_name + "-%s" % model_name, "rb"))
+        return pickle.load(open(self.path_name + "-%s" % model_name, "rb"))
 
     @staticmethod
     def clean_workspace(clean=False):
