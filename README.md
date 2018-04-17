@@ -58,7 +58,7 @@ test_size = 0.1
 
 Then run ``python main.py`` in your command line. There will be a recommendation model built on the dataset you choose above.
 
-Note: my code only test on python3, so python3 is prefer.
+Note: my code only tested on python3, so python3 is prefer.
 
 ```shell
 Python main.py
@@ -152,7 +152,7 @@ total 1972.49 seconds have spent
 
 Here are four models' benchmarks over Precision、Recall、Coverage、Popularity. The testsize is 0.1.
 
-These results are nearly the same with the book, which prove that my algorithms are right.
+These results are nearly same with *Xiang Liang*'s book, which proves that my algorithms are right.
 
 **Movielens 1M:**
 
