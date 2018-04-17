@@ -12,9 +12,8 @@ from UserCF import UserBasedCF
 from dataset import DataSet
 from utils import LogTime
 
-if __name__ == '__main__':
-    main_time = LogTime("Main Function")
-    dataset_name = 'ml-100k'
+
+def run_model(model_name='UserCF', clean=False):
     model_manager = utils.ModelManager(dataset_name)
     try:
         train = model_manager.load_model('trainset')
@@ -26,24 +25,33 @@ if __name__ == '__main__':
         model_manager.save_model(test, 'testset')
     '''Do you want to clean workspace and retrain model again?'''
     '''if you want to change test_size or retrain model, please set clean_workspace True'''
-    # utils.clean_workspace(False)
-    # usercf = UserBasedCF()
-    # usercf.fit(train)
-    # recommend100 = usercf.recommend('100')
-    # recommend88 = usercf.recommend('88')
-    # recommend89 = usercf.recommend('89')
-    # print("recommend for userid = 100:\n", recommend100)
-    # print("recommend for userid = 88:\n", recommend88)
-    # print("recommend for userid = 89:\n", recommend89)
-    # usercf.test(test)
-    itemcf = ItemBasedCF()
-    itemcf.fit(train)
-    recommend100 = itemcf.recommend('100')
-    recommend88 = itemcf.recommend('88')
-    recommend89 = itemcf.recommend('89')
-    print("recommend for userid = 100:\n", recommend100)
-    print("recommend for userid = 88:\n", recommend88)
-    print("recommend for userid = 89:\n", recommend89)
-    itemcf.test(test)
+    model_manager.clean_workspace(clean)
+    if model_name == 'UserCF':
+        usercf = UserBasedCF()
+        usercf.fit(train)
+        recommend_test(usercf, [1, 100, 233, 666, 888])
+        usercf.test(test)
+    elif model_name == 'ItemCF':
+        itemcf = ItemBasedCF()
+        itemcf.fit(train)
+        recommend_test(itemcf, [1, 100, 233, 666, 888])
+        itemcf.test(test)
+    else:
+        raise ValueError('No model named' + model_name)
 
+
+def recommend_test(model, user_list):
+    for user in user_list:
+        recommend = model.recommend(str(user))
+        print("recommend for userid = %s:" % user)
+        print(recommend)
+        print()
+
+
+if __name__ == '__main__':
+    main_time = LogTime(words="Main Function")
+    dataset_name = 'ml-100k'
+    model_type = 'UserCF'
+    # model_type = 'ItemCF'
+    run_model(model_type, False)
     main_time.finish()

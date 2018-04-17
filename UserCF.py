@@ -18,7 +18,7 @@ import utils
 from utils import LogTime
 
 
-class UserBasedCF():
+class UserBasedCF:
     """
     User-based Collaborative filtering.
     Top-N recommendation.
@@ -29,6 +29,7 @@ class UserBasedCF():
         Init UserBasedCF with n_sim_user and n_rec_movie.
         :return: None
         """
+        print("UserBasedCF start...\n")
         self.n_sim_user = n_sim_user
         self.n_rec_movie = n_rec_movie
         self.trainset = None
@@ -42,11 +43,11 @@ class UserBasedCF():
         """
         model_manager = utils.ModelManager()
         try:
-            print('The model has saved before.\nBegin loading model...')
             self.user_sim_mat = model_manager.load_model('user_sim_mat')
             self.movie_popular = model_manager.load_model('movie_popular')
             self.movie_count = model_manager.load_model('movie_count')
-            print('Load model success.')
+            self.trainset = model_manager.load_model('trainset')
+            print('User similarity model has saved before.\nLoad model success...\n')
         except OSError:
             print('No model saved before.\nTrain a new model...')
             self.user_sim_mat, self.movie_popular, self.movie_count = \
@@ -57,7 +58,7 @@ class UserBasedCF():
                 model_manager.save_model(self.user_sim_mat, 'user_sim_mat')
                 model_manager.save_model(self.movie_popular, 'movie_popular')
                 model_manager.save_model(self.movie_count, 'movie_count')
-                print('The new model has saved success.')
+                print('The new model has saved success.\n')
 
     def recommend(self, user):
         """
@@ -65,7 +66,8 @@ class UserBasedCF():
         :param user: The user we recommend movies to.
         :return: the N best score movies
         """
-        if not self.n_rec_movie or not self.trainset or not self.movie_popular or not self.movie_count:
+        if not self.user_sim_mat or not self.n_rec_movie or \
+                not self.trainset or not self.movie_popular or not self.movie_count:
             raise NotImplementedError('UserCF has not init or fit method has not called yet.')
         K = self.n_sim_user
         N = self.n_rec_movie
@@ -132,7 +134,7 @@ class UserBasedCF():
         print('Test recommendation system success.')
         test_time.finish()
 
-        print('precision=%.4f\trecall=%.4f\tcoverage=%.4f\tpopularity=%.4f' %
+        print('precision=%.4f\trecall=%.4f\tcoverage=%.4f\tpopularity=%.4f\n' %
               (precision, recall, coverage, popularity))
 
     def predict(self, testset):

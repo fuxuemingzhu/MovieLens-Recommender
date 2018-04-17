@@ -32,7 +32,7 @@ class LogTime:
 
     def finish(self):
         print('total %s step number is %d' % (self.words, self.get_curr_step()))
-        print('total %.2f seconds have spent' % self.get_total_time())
+        print('total %.2f seconds have spent\n' % self.get_total_time())
 
     def get_curr_step(self):
         return self.proccess_count
