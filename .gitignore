@@ -57,13 +57,6 @@ docs/_build/
 target/
 
 # Movie rating data
-ml-1m/
-ml-1m.zip
-ml-100k/
-ml-100k.zip
-jester_dataset_2.zip
-jester_dataset_2/
-dataset
 
 # model
 model/
