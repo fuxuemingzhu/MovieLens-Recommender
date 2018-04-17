@@ -91,7 +91,7 @@ class DataSet:
         :return: tuple: User id, item id, rating score.
                 The timestamp will be ignored cause it wasn't used in Collaborative filtering.
         """
-        user, movie, rate = line.strip('\r\n').split(sep)[:4]
+        user, movie, rate = line.strip('\r\n').split(sep)[:3]
         return user, movie, rate
 
     @classmethod

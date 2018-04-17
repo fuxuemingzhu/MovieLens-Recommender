@@ -136,24 +136,21 @@ class UserBasedCF:
         print('precision=%.4f\trecall=%.4f\tcoverage=%.4f\tpopularity=%.4f\n' %
               (precision, recall, coverage, popularity))
 
-        def predict(self, testset):
-            """
-            Predict scores of movies to all users in testset.
-            :param testset: test dataset
-            :return: `dict` : recommend list for each user.
-            """
-            movies_recommend = defaultdict(list)
-            print('Predict scores start...')
-            # record the calculate time has spent.
-            predict_time = LogTime(print_step=500)
-            for i, user in enumerate(self.trainset):
-                test_movies = testset.get(user, {})
-                rec_movies = self.recommend(user)  # type:list
-                for movie, _ in rec_movies:
-                    if movie in test_movies:
-                        movies_recommend[user].append(movie)
-                # log steps and times.
-                predict_time.count_time()
-            print('Predict scores success.')
-            predict_time.finish()
-            return movies_recommend
+    def predict(self, testset):
+        """
+        Recommend movies to all users in testset.
+        :param testset: test dataset
+        :return: `dict` : recommend list for each user.
+        """
+        movies_recommend = defaultdict(list)
+        print('Predict scores start...')
+        # record the calculate time has spent.
+        predict_time = LogTime(print_step=500)
+        for i, user in enumerate(testset):
+            rec_movies = self.recommend(user)  # type:list
+            movies_recommend[user].append(rec_movies)
+            # log steps and times.
+            predict_time.count_time()
+        print('Predict scores success.')
+        predict_time.finish()
+        return movies_recommend

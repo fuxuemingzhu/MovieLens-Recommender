@@ -17,7 +17,7 @@ from utils import LogTime
 
 def run_model(model_name, dataset_name, test_size=0.3, clean=False):
     print('*' * 70)
-    print('This is %s model trained on %s with test_size = %.2f' % (model_name, dataset_name, test_size))
+    print('\tThis is %s model trained on %s with test_size = %.2f' % (model_name, dataset_name, test_size))
     print('*' * 70 + '\n')
     model_manager = utils.ModelManager(dataset_name, test_size)
     try:

@@ -130,7 +130,7 @@ class RandomPredict:
 
     def predict(self, testset):
         """
-        Predict scores of movies to all users in testset.
+        Recommend movies to all users in testset.
         :param testset: test dataset
         :return: `dict` : recommend list for each user.
         """
@@ -138,12 +138,9 @@ class RandomPredict:
         print('Predict scores start...')
         # record the calculate time has spent.
         predict_time = utils.LogTime(print_step=500)
-        for i, user in enumerate(self.trainset):
-            test_movies = testset.get(user, {})
+        for i, user in enumerate(testset):
             rec_movies = self.recommend(user)  # type:list
-            for movie, _ in rec_movies:
-                if movie in test_movies:
-                    movies_recommend[user].append(movie)
+            movies_recommend[user].append(rec_movies)
             # log steps and times.
             predict_time.count_time()
         print('Predict scores success.')
