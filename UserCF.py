@@ -40,12 +40,12 @@ class UserBasedCF():
         :param trainset: train dataset
         :return: None
         """
+        model_manager = utils.ModelManager()
         try:
             print('The model has saved before.\nBegin loading model...')
-            self.user_sim_mat = utils.load_model('user_sim_mat')
-            self.movie_popular = utils.load_model('movie_popular')
-            self.movie_count = utils.load_model('movie_count')
-            self.trainset = utils.load_model('trainset')
+            self.user_sim_mat = model_manager.load_model('user_sim_mat')
+            self.movie_popular = model_manager.load_model('movie_popular')
+            self.movie_count = model_manager.load_model('movie_count')
             print('Load model success.')
         except OSError:
             print('No model saved before.\nTrain a new model...')
@@ -54,10 +54,9 @@ class UserBasedCF():
             self.trainset = trainset
             print('Train a new model success.')
             if self.save_model:
-                utils.save_model(self.user_sim_mat, 'user_sim_mat')
-                utils.save_model(self.movie_popular, 'movie_popular')
-                utils.save_model(self.movie_count, 'movie_count')
-                utils.save_model(self.trainset, 'trainset')
+                model_manager.save_model(self.user_sim_mat, 'user_sim_mat')
+                model_manager.save_model(self.movie_popular, 'movie_popular')
+                model_manager.save_model(self.movie_count, 'movie_count')
                 print('The new model has saved success.')
 
     def recommend(self, user):
@@ -79,11 +78,12 @@ class UserBasedCF():
         # record the calculate time has spent.
         for similar_user, similarity_factor in sorted(self.user_sim_mat[user].items(),
                                                       key=itemgetter(1), reverse=True)[0:K]:
-            for movie in self.trainset[similar_user]:
+            for movie, rating in self.trainset[similar_user].items():
                 if movie in watched_movies:
                     continue
                 # predict the user's "interest" for each movie
-                predict_score[movie] += similarity_factor
+                # the predict_score is sum(similarity_factor * rating)
+                predict_score[movie] += similarity_factor * rating
                 # log steps and times.
         # print('Recommend movies to user success.')
         # return the N best score movies
