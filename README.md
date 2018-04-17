@@ -1,20 +1,20 @@
 # MovieLens-Recommender
 
-A pure Python implement of ``Collaborative Filtering``. Which contains ``User Based Collaborative Filtering``(UserCF) and ``Item Based Collaborative Filtering``(ItemCF). As comparisons, ``Random Based Recommendation`` and ``Most-Popular Based Recommendation`` are also included, too.
+[MovieLens-Recommender][1] is a pure Python implement of ``Collaborative Filtering``. Which contains ``User Based Collaborative Filtering(UserCF)`` and ``Item Based Collaborative Filtering(ItemCF)``. As comparisons, ``Random Based Recommendation`` and ``Most-Popular Based Recommendation`` are also included.
 
-The buildin-datasets are ``Movielens-1M`` and ``Movielens-100k``. But you can of course use a custom dataset easily.
+The buildin-datasets are ``Movielens-1M`` and ``Movielens-100k``. But of course, you can use other custom datasets.
 
 # Overview
 
-The book 《[推荐系统实践](https://book.douban.com/subject/10769749/)》 written by *Xiang Liang* is quite wonderful for those people who don't have much knowledge about Recommendation System. But the book only offers each function of ``Collaborative Filtering``. Good structure, building datasets and model validation are required.
+The book 《[推荐系统实践](https://book.douban.com/subject/10769749/)》 written by *Xiang Liang* is quite wonderful for those people who don't have much knowledge about Recommendation System. But the book only offers each function's implement of ``Collaborative Filtering``. A good architecture project with datasets-build and model-validation process are required.
 
-So I made ``MovieLens-Recommender`` project, which is a pure Python implement of ``Collaborative Filtering`` part based on the ideas of this book.
+So I made [MovieLens-Recommender][1] project, which is a pure Python implement of ``Collaborative Filtering`` part based on the ideas of the book.
 
-This repository is based on [MovieLens-RecSys][1], which is also a quit well implement of ``Collaborative Filtering``. But its efficiency is so damn poor!
+This repository is based on [MovieLens-RecSys][2], which is also a quit well implement of ``Collaborative Filtering``. But its efficiency is so damn poor!
 
-Besides, [Surprise][2] is a very popular Python *scikit* building and analyzing recommender systems. So, I pick up the advantages of these two projects, and here comes ``MovieLens-Recommender``.
+Besides, [Surprise][3] is a very popular Python *scikit* building and analyzing recommender systems. So, I pick up the advantages of these two projects, and here comes ``MovieLens-Recommender``.
 
-A common Recommendation System contains four steps:
+My Recommendation System contains four steps:
 
 - Create trainset and testset
 - Train a recommender model
@@ -28,7 +28,7 @@ At the end of a recommendation process, four numbers are given to measure the re
 - Coverage
 - Popularity
 
-**No python extensions(e.g. Numpy/pandas) are need!**
+**No python extensions(e.g. Numpy/pandas) are needed!**
 
 # Getting started
 
@@ -36,15 +36,15 @@ At the end of a recommendation process, four numbers are given to measure the re
 
 ``Git`` is awesome~
 
-   ```shell
-   git clone https://github.com/Lockvictor/MovieLens-RecSys.git
-   ```
+```shell
+git clone https://github.com/fuxuemingzhu/MovieLens-Recommender.git
+```
 
-`Movielens-1M` and `Movielens-100k` are under the `data/` folder.
+`Movielens-1M` and `Movielens-100k` datasets are under the `data/` folder.
 
 **2. Run**
 
-The configures are in `main.py`. Pleas choose the dataset and model you want to use and set the proper test_size. The default values are shown below:
+The configures are in `main.py`. Pleas choose the dataset and model you want to use and set the proper test_size. The default values in `main.py` are shown below:
 
 ```python
 dataset_name = 'ml-100k'
@@ -56,7 +56,7 @@ model_type = 'Random'
 test_size = 0.1
 ```
 
-In your command line, run ``python main.py``. There will be a recommendation model built on the dataset you choose above.
+Then run ``python main.py`` in your command line. There will be a recommendation model built on the dataset you choose above.
 
 Note: my code only test on python3, so python3 is prefer.
 
@@ -64,7 +64,7 @@ Note: my code only test on python3, so python3 is prefer.
 Python main.py
 #Python3 main.py
 ```
-if you are using Linux, this command will set the whole output into a file.
+if you are using Linux, this command will redirect the whole output into a file.
 
 ```shell
 Python usercf.py > run.log 2>&1 &
@@ -174,10 +174,9 @@ These results are nearly the same with the book, which prove that my algorithms 
 
 # Attention
 
-UserCF is faser than ItemCF. Using `ml-100k` instead of `ml-1m` will cut down the whole run time.
+UserCF is faser than ItemCF. Using `ml-100k` instead of `ml-1m` will speed up the predict process.
 
-Caculate similarity matrix is quite slow. Please wait for the result patiently.
-
+Caculating similarity matrix is quite slow. Please wait for the result patiently.
 
 # Licence
 
@@ -198,6 +197,6 @@ Apache License.
     limitations under the License.
 
 
-  [1]: https://github.com/Lockvictor/MovieLens-RecSys
-  [2]: https://github.com/NicolasHug/Surprise
-  [3]: http://www.apache.org/img/asf_logo.png
+  [1]: https://github.com/fuxuemingzhu/MovieLens-Recommender
+  [2]: https://github.com/Lockvictor/MovieLens-RecSys
+  [3]: https://github.com/NicolasHug/Surprise
