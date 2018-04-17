@@ -151,4 +151,3 @@ def calculate_movie_popular(trainset):
     movie_count = len(movie_popular)
     print('total movie number = %d' % movie_count)
     return movie_popular, movie_count
-

@@ -10,6 +10,7 @@ import utils
 from ItemCF import ItemBasedCF
 from UserCF import UserBasedCF
 from dataset import DataSet
+from most_popular import MostPopular
 from random_pred import RandomPredict
 from utils import LogTime
 
@@ -36,6 +37,8 @@ def run_model(model_name='UserCF', test_size=0.3, clean=False):
         model = ItemBasedCF()
     elif model_name == 'Random':
         model = RandomPredict()
+    elif model_name == 'MostPopular':
+        model = MostPopular()
     else:
         raise ValueError('No model named' + model_name)
     model.fit(trainset)
@@ -57,7 +60,8 @@ if __name__ == '__main__':
     dataset_name = 'ml-1m'
     # model_type = 'UserCF'
     # model_type = 'ItemCF'
-    model_type = 'Random'
+    # model_type = 'Random'
+    model_type = 'MostPopular'
     test_size = 0.1
     run_model(model_type, test_size, False)
     main_time.finish()
