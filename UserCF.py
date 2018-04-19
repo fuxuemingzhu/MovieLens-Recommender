@@ -24,16 +24,17 @@ class UserBasedCF:
     Top-N recommendation.
     """
 
-    def __init__(self, n_sim_user=20, n_rec_movie=10, save_model=True):
+    def __init__(self, k_sim_user=20, n_rec_movie=10, use_iif_similarity=False, save_model=True):
         """
         Init UserBasedCF with n_sim_user and n_rec_movie.
         :return: None
         """
         print("UserBasedCF start...\n")
-        self.n_sim_user = n_sim_user
+        self.k_sim_user = k_sim_user
         self.n_rec_movie = n_rec_movie
         self.trainset = None
         self.save_model = save_model
+        self.use_iif_similarity = use_iif_similarity
 
     def fit(self, trainset):
         """
@@ -42,23 +43,27 @@ class UserBasedCF:
         :return: None
         """
         model_manager = utils.ModelManager()
+        model_tail = '-k' + str(self.k_sim_user) + '-n' + str(self.n_rec_movie)
+        if self.use_iif_similarity:
+            model_tail += '-iif'
         try:
-            self.user_sim_mat = model_manager.load_model('user_sim_mat')
+            self.user_sim_mat = model_manager.load_model('user_sim_mat' + model_tail)
             self.movie_popular = model_manager.load_model('movie_popular')
             self.movie_count = model_manager.load_model('movie_count')
             self.trainset = model_manager.load_model('trainset')
-            print('User similarity model has saved before.\nLoad model success...\n')
+            print('User origin similarity model has saved before.\nLoad model success...\n')
         except OSError:
             print('No model saved before.\nTrain a new model...')
             self.user_sim_mat, self.movie_popular, self.movie_count = \
-                similarity.calculate_user_similarity(trainset=trainset)
+                similarity.calculate_user_similarity(trainset=trainset,
+                                                     use_iif_similarity=self.use_iif_similarity)
             self.trainset = trainset
             print('Train a new model success.')
             if self.save_model:
-                model_manager.save_model(self.user_sim_mat, 'user_sim_mat')
+                model_manager.save_model(self.user_sim_mat, 'user_sim_mat' + model_tail)
                 model_manager.save_model(self.movie_popular, 'movie_popular')
                 model_manager.save_model(self.movie_count, 'movie_count')
-                print('The new model has saved success.\n')
+            print('The new model has saved success.\n')
 
     def recommend(self, user):
         """
@@ -69,7 +74,7 @@ class UserBasedCF:
         if not self.user_sim_mat or not self.n_rec_movie or \
                 not self.trainset or not self.movie_popular or not self.movie_count:
             raise NotImplementedError('UserCF has not init or fit method has not called yet.')
-        K = self.n_sim_user
+        K = self.k_sim_user
         N = self.n_rec_movie
         predict_score = collections.defaultdict(int)
         if user not in self.trainset:

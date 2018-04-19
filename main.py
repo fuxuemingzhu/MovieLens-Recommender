@@ -32,13 +32,15 @@ def run_model(model_name, dataset_name, test_size=0.3, clean=False):
     '''if you want to change test_size or retrain model, please set clean_workspace True'''
     model_manager.clean_workspace(clean)
     if model_name == 'UserCF':
-        model = UserBasedCF()
+        model = UserBasedCF(k_sim_user=80)
     elif model_name == 'ItemCF':
         model = ItemBasedCF()
     elif model_name == 'Random':
         model = RandomPredict()
     elif model_name == 'MostPopular':
         model = MostPopular()
+    elif model_name == 'UserCF-IIF':
+        model = UserBasedCF(k_sim_user=80, use_iif_similarity=True)
     else:
         raise ValueError('No model named' + model_name)
     model.fit(trainset)
@@ -58,10 +60,11 @@ if __name__ == '__main__':
     main_time = LogTime(words="Main Function")
     dataset_name = 'ml-100k'
     # dataset_name = 'ml-1m'
-    # model_type = 'UserCF'
+    model_type = 'UserCF'
+    # model_type = 'UserCF-IIF'
     # model_type = 'ItemCF'
     # model_type = 'Random'
-    model_type = 'MostPopular'
+    # model_type = 'MostPopular'
     test_size = 0.1
     run_model(model_type, dataset_name, test_size, False)
     main_time.finish()

@@ -15,12 +15,13 @@ from collections import defaultdict
 from utils import LogTime
 
 
-def calculate_user_similarity(trainset):
+def calculate_user_similarity(trainset, use_iif_similarity=False):
     """
     Calculate user similarity matrix by building movie-users inverse table.
     The calculating will only between users which have common items votes.
 
-    :rtype: object
+    :param use_iif_similarity:  This is based on User IIF similarity.
+                                if the item is very popular, users' similarity will be lower.
     :param trainset: trainset
     :return: similarity matrix
     """
@@ -59,7 +60,12 @@ def calculate_user_similarity(trainset):
                     continue
                 # ignore the score they voted.
                 # user similarity matrix only focus on co-occurrence.
-                usersim_mat[user1][user2] += 1
+                if use_iif_similarity:
+                    # if the item is very popular, users' similarity will be lower.
+                    usersim_mat[user1][user2] += 1 / math.log(1 + len(users))
+                else:
+                    # origin method, users'similarity based on common items count.
+                    usersim_mat[user1][user2] += 1
         # log steps and times.
         movie2users_time.count_time()
     print('generate user co-rated movies similarity matrix success.')

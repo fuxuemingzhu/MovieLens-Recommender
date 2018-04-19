@@ -28,13 +28,13 @@ class ItemBasedCF:
     Top-N recommendation.
     """
 
-    def __init__(self, n_sim_movie=20, n_rec_movie=10, save_model=True):
+    def __init__(self, k_sim_movie=20, n_rec_movie=10, save_model=True):
         """
         Init UserBasedCF with n_sim_user and n_rec_movie.
         :return: None
         """
         print("ItemBasedCF start...\n")
-        self.n_sim_movie = n_sim_movie
+        self.k_sim_movie = k_sim_movie
         self.n_rec_movie = n_rec_movie
         self.trainset = None
         self.save_model = save_model
@@ -74,7 +74,7 @@ class ItemBasedCF:
         if not self.movie_sim_mat or not self.n_rec_movie or \
                 not self.trainset or not self.movie_popular or not self.movie_count:
             raise NotImplementedError('ItemCF has not init or fit method has not called yet.')
-        K = self.n_sim_movie
+        K = self.k_sim_movie
         N = self.n_rec_movie
         predict_score = collections.defaultdict(int)
         if user not in self.trainset:

@@ -172,7 +172,7 @@ These results are nearly same with *Xiang Liang*'s book, which proves that my al
 | Random | 0.82% | 0.77% | 99.64% | 3.0332 |
 | Most Popular | 10.54% | 9.90% | 4.07% | 5.9578 |
 
-# Attention
+# Notice
 
 UserCF is faser than ItemCF. Using `ml-100k` instead of `ml-1m` will speed up the predict process.
 
