@@ -48,7 +48,8 @@ class ItemBasedCF:
         """
         model_manager = utils.ModelManager()
         try:
-            self.movie_sim_mat = model_manager.load_model('movie_sim_mat-iif')
+            self.movie_sim_mat = model_manager.load_model(
+                'movie_sim_mat-iif' if self.use_iuf_similarity else 'movie_sim_mat')
             self.movie_popular = model_manager.load_model('movie_popular')
             self.movie_count = model_manager.load_model('movie_count')
             self.trainset = model_manager.load_model('trainset')
@@ -61,7 +62,8 @@ class ItemBasedCF:
             self.trainset = trainset
             print('Train a new model success.')
             if self.save_model:
-                model_manager.save_model(self.movie_sim_mat, 'movie_sim_mat-iif')
+                model_manager.save_model(self.movie_sim_mat,
+                                         'movie_sim_mat-iif' if self.use_iuf_similarity else 'movie_sim_mat')
                 model_manager.save_model(self.movie_popular, 'movie_popular')
                 model_manager.save_model(self.movie_count, 'movie_count')
                 model_manager.save_model(self.trainset, 'trainset')
