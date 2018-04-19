@@ -43,11 +43,8 @@ class UserBasedCF:
         :return: None
         """
         model_manager = utils.ModelManager()
-        model_tail = '-k' + str(self.k_sim_user) + '-n' + str(self.n_rec_movie)
-        if self.use_iif_similarity:
-            model_tail += '-iif'
         try:
-            self.user_sim_mat = model_manager.load_model('user_sim_mat' + model_tail)
+            self.user_sim_mat = model_manager.load_model('user_sim_mat-iif')
             self.movie_popular = model_manager.load_model('movie_popular')
             self.movie_count = model_manager.load_model('movie_count')
             self.trainset = model_manager.load_model('trainset')
@@ -60,7 +57,7 @@ class UserBasedCF:
             self.trainset = trainset
             print('Train a new model success.')
             if self.save_model:
-                model_manager.save_model(self.user_sim_mat, 'user_sim_mat' + model_tail)
+                model_manager.save_model(self.user_sim_mat, 'user_sim_mat-iif')
                 model_manager.save_model(self.movie_popular, 'movie_popular')
                 model_manager.save_model(self.movie_count, 'movie_count')
             print('The new model has saved success.\n')

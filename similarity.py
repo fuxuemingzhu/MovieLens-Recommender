@@ -89,12 +89,13 @@ def calculate_user_similarity(trainset, use_iif_similarity=False):
     return usersim_mat, movie_popular, movie_count
 
 
-def calculate_item_similarity(trainset):
+def calculate_item_similarity(trainset, use_iuf_similarity=False):
     """
     Calculate item similarity matrix by building movie-users inverse table.
     The calculating will only between items which are voted by common users.
 
-    :rtype: object
+    :param use_iuf_similarity:  This is based on Item IUF similarity.
+                                if a person views a lot of movies, items' similarity will be lower.
     :param trainset: trainset
     :return: similarity matrix
     """
@@ -119,7 +120,12 @@ def calculate_item_similarity(trainset):
                     continue
                 # ignore the score they voted.
                 # item similarity matrix only focus on co-occurrence.
-                movie_sim_mat[movie1][movie2] += 1
+                if use_iuf_similarity:
+                    # if a person views a lot of movies, items' similarity will be lower.
+                    movie_sim_mat[movie1][movie2] += 1 / math.log(1 + len(movies))
+                else:
+                    # origin method, users'similarity based on common items count.
+                    movie_sim_mat[movie1][movie2] += 1
         # log steps and times.
         movie2users_time.count_time()
     print('generate items co-rated similarity matrix success.')

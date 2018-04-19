@@ -28,7 +28,7 @@ class ItemBasedCF:
     Top-N recommendation.
     """
 
-    def __init__(self, k_sim_movie=20, n_rec_movie=10, save_model=True):
+    def __init__(self, k_sim_movie=20, n_rec_movie=10, use_iuf_similarity=False, save_model=True):
         """
         Init UserBasedCF with n_sim_user and n_rec_movie.
         :return: None
@@ -38,6 +38,7 @@ class ItemBasedCF:
         self.n_rec_movie = n_rec_movie
         self.trainset = None
         self.save_model = save_model
+        self.use_iuf_similarity = use_iuf_similarity
 
     def fit(self, trainset):
         """
@@ -47,7 +48,7 @@ class ItemBasedCF:
         """
         model_manager = utils.ModelManager()
         try:
-            self.movie_sim_mat = model_manager.load_model('movie_sim_mat')
+            self.movie_sim_mat = model_manager.load_model('movie_sim_mat-iif')
             self.movie_popular = model_manager.load_model('movie_popular')
             self.movie_count = model_manager.load_model('movie_count')
             self.trainset = model_manager.load_model('trainset')
@@ -55,11 +56,12 @@ class ItemBasedCF:
         except OSError:
             print('No model saved before.\nTrain a new model...')
             self.movie_sim_mat, self.movie_popular, self.movie_count = \
-                similarity.calculate_item_similarity(trainset=trainset)
+                similarity.calculate_item_similarity(trainset=trainset,
+                                                     use_iuf_similarity=self.use_iuf_similarity)
             self.trainset = trainset
             print('Train a new model success.')
             if self.save_model:
-                model_manager.save_model(self.movie_sim_mat, 'movie_sim_mat')
+                model_manager.save_model(self.movie_sim_mat, 'movie_sim_mat-iif')
                 model_manager.save_model(self.movie_popular, 'movie_popular')
                 model_manager.save_model(self.movie_count, 'movie_count')
                 model_manager.save_model(self.trainset, 'trainset')
