@@ -4,15 +4,17 @@
 
 The buildin-datasets are ``Movielens-1M`` and ``Movielens-100k``. But of course, you can use other custom datasets.
 
+Besides, there are two models named ``UserCF-IIF`` and ``ItemCF-IUF``, which have improvement to ``UseCF`` and ``ItemCF``. They eliminate the influence of very popular users or items.
+
 # Overview
 
 The book 《[推荐系统实践](https://book.douban.com/subject/10769749/)》 written by *Xiang Liang* is quite wonderful for those people who don't have much knowledge about Recommendation System. But the book only offers each function's implement of ``Collaborative Filtering``. A good architecture project with datasets-build and model-validation process are required.
 
-So I made [MovieLens-Recommender][1] project, which is a pure Python implement of ``Collaborative Filtering`` part based on the ideas of the book.
+So I made [MovieLens-Recommender][1] project, which is a pure Python implement of ``Collaborative Filtering`` based on the ideas of the book.
 
-This repository is based on [MovieLens-RecSys][2], which is also a quit well implement of ``Collaborative Filtering``. But its efficiency is so damn poor!
+This repository is based on [MovieLens-RecSys][2], which is also a good implement of ``Collaborative Filtering``. But its efficiency is so damn poor!
 
-Besides, [Surprise][3] is a very popular Python *scikit* building and analyzing recommender systems. So, I pick up the advantages of these two projects, and here comes ``MovieLens-Recommender``.
+Besides, [Surprise][3] is a very popular Python *scikit* building and analyzing recommender systems. So, I Mix the advantages of these two projects, and here comes ``MovieLens-Recommender``.
 
 My Recommendation System contains four steps:
 
@@ -160,6 +162,8 @@ These results are nearly same with *Xiang Liang*'s book, which proves that my al
 | :------------------: | --------: | -----: | -------: | ---------: |
 | UserCF | 19.84% | 11.97% | 28.16% | 7.2023 |
 | ItemCF | 19.00% | 11.47% | 16.73% | 7.3911 |
+| UserCF-IIF | 19.77% | 11.93% | 29.62% | 7.1660 |
+| ItemCF-IUF | 18.71% | 11.29% | 15.03% | 7.4748 |
 | Random | 0.54% | 0.33% | 100.00% | 4.4075 |
 | Most Popular | 10.59% | 6.39% | 2.76% | 7.7462 |
 
@@ -169,6 +173,8 @@ These results are nearly same with *Xiang Liang*'s book, which proves that my al
 | :------------------: | --------: | -----: | -------: | ---------: |
 | UserCF | 19.69% | 18.50% | 22.20% | 5.4928 |
 | ItemCF | 17.89% | 16.80% | 13.23% | 5.6202 |
+| UserCF-IIF | 19.57% | 18.38% | 22.74% | 5.4716 |
+| ItemCF-IUF | 20.38% | 12.30% | 17.30% | 7.3643 |
 | Random | 0.82% | 0.77% | 99.64% | 3.0332 |
 | Most Popular | 10.54% | 9.90% | 4.07% | 5.9578 |
 
