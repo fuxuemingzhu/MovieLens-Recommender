@@ -52,9 +52,11 @@ The configures are in `main.py`. Pleas choose the dataset and model you want to 
 dataset_name = 'ml-100k'
 # dataset_name = 'ml-1m'
 # model_type = 'UserCF'
+# model_type = 'UserCF-IIF'
 # model_type = 'ItemCF'
-model_type = 'Random'
+# model_type = 'Random'
 # model_type = 'MostPopular'
+model_type = 'ItemCF-IUF'
 test_size = 0.1
 ```
 
