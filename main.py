@@ -8,6 +8,7 @@ Created on 2018-04-16
 """
 import utils
 from ItemCF import ItemBasedCF
+from LFM import LFM
 from UserCF import UserBasedCF
 from dataset import DataSet
 from most_popular import MostPopular
@@ -43,8 +44,10 @@ def run_model(model_name, dataset_name, test_size=0.3, clean=False):
         model = UserBasedCF(use_iif_similarity=True)
     elif model_name == 'ItemCF-IUF':
         model = ItemBasedCF(use_iuf_similarity=True)
+    elif model_name == 'LFM':
+        model = LFM(10, 10, 0.1, 0.01, 10)
     else:
-        raise ValueError('No model named' + model_name)
+        raise ValueError('No model named ' + model_name)
     model.fit(trainset)
     recommend_test(model, [1, 100, 233, 666, 888])
     model.test(testset)
@@ -67,7 +70,8 @@ if __name__ == '__main__':
     # model_type = 'ItemCF'
     # model_type = 'Random'
     # model_type = 'MostPopular'
-    model_type = 'ItemCF-IUF'
+    # model_type = 'ItemCF-IUF'
+    model_type = 'LFM'
     test_size = 0.1
     run_model(model_type, dataset_name, test_size, False)
     main_time.finish()
