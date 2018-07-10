@@ -1,6 +1,6 @@
 # MovieLens-Recommender
 
-[MovieLens-Recommender][1] is a pure Python implement of ``Collaborative Filtering``. Which contains ``User Based Collaborative Filtering(UserCF)`` and ``Item Based Collaborative Filtering(ItemCF)``. As comparisons, ``Random Based Recommendation`` and ``Most-Popular Based Recommendation`` are also included.
+[MovieLens-Recommender][1] is a pure Python implement of ``Collaborative Filtering``. Which contains ``User Based Collaborative Filtering(UserCF)`` and ``Item Based Collaborative Filtering(ItemCF)``. As comparisons, ``Random Based Recommendation`` and ``Most-Popular Based Recommendation`` are also included. The famous ``Latent Factor Model(LFM)`` is added in this Repo,too.
 
 The buildin-datasets are ``Movielens-1M`` and ``Movielens-100k``. But of course, you can use other custom datasets.
 
@@ -57,6 +57,7 @@ dataset_name = 'ml-100k'
 # model_type = 'Random'
 # model_type = 'MostPopular'
 model_type = 'ItemCF-IUF'
+# model_type = 'LFM'
 test_size = 0.1
 ```
 
@@ -71,8 +72,8 @@ Python main.py
 if you are using Linux, this command will redirect the whole output into a file.
 
 ```shell
-Python usercf.py > run.log 2>&1 &
-#Python3 usercf.py > run.log 2>&1 &
+Python main.py > run.log 2>&1 &
+#Python3 main.py > run.log 2>&1 &
 ```
 
 This command will run in background. You can wait for the result, or use `tail -f run.log` to see the real time result.
@@ -166,6 +167,7 @@ These results are nearly same with *Xiang Liang*'s book, which proves that my al
 | ItemCF | 19.00% | 11.47% | 16.73% | 7.3911 |
 | UserCF-IIF | 19.77% | 11.93% | 29.62% | 7.1660 |
 | ItemCF-IUF | 18.71% | 11.29% | 15.03% | 7.4748 |
+| LFM | / | / | / | / |
 | Random | 0.54% | 0.33% | 100.00% | 4.4075 |
 | Most Popular | 10.59% | 6.39% | 2.76% | 7.7462 |
 
@@ -177,6 +179,7 @@ These results are nearly same with *Xiang Liang*'s book, which proves that my al
 | ItemCF | 17.89% | 16.80% | 13.23% | 5.6202 |
 | UserCF-IIF | 19.57% | 18.38% | 22.74% | 5.4716 |
 | ItemCF-IUF | 20.38% | 12.30% | 17.30% | 7.3643 |
+| LFM | 20.29% | 19.06% | 27.41% | 4.9983 |
 | Random | 0.82% | 0.77% | 99.64% | 3.0332 |
 | Most Popular | 10.54% | 9.90% | 4.07% | 5.9578 |
 
@@ -185,6 +188,10 @@ These results are nearly same with *Xiang Liang*'s book, which proves that my al
 UserCF is faser than ItemCF. Using `ml-100k` instead of `ml-1m` will speed up the predict process.
 
 Caculating similarity matrix is quite slow. Please wait for the result patiently.
+
+LFM will make negative samples when running. And when the ratio of Neg./Pos. goes to larger, the performance goes to better.
+
+LFM has more parameters to tune, and I don't spend much time to do this. I believe you will do quite better!
 
 # Licence
 
