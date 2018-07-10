@@ -11,7 +11,6 @@
 Description : Latent Factor Model
 """
 import collections
-import operator
 import random
 from operator import itemgetter
 
@@ -19,7 +18,6 @@ import math
 
 from collections import defaultdict
 
-import similarity
 import utils
 from utils import LogTime
 
@@ -96,12 +94,12 @@ class LFM:
         samples = dict()
         for item, rate in items.items():
             samples[item] = 1
-        for i in range(len(items) * 3):
+        for i in range(len(items) * 11):
             item = self.items_list[random.randint(0, len(self.items_list) - 1)]
             if item in samples:
                 continue
             samples[item] = 0
-            if len(samples) >= 2 * len(items):
+            if len(samples) >= 10 * len(items):
                 break
         # print(samples)
         return samples
