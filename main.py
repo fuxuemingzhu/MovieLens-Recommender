@@ -68,10 +68,10 @@ if __name__ == '__main__':
     # model_type = 'UserCF'
     # model_type = 'UserCF-IIF'
     # model_type = 'ItemCF'
-    # model_type = 'Random'
+    model_type = 'Random'
     # model_type = 'MostPopular'
     # model_type = 'ItemCF-IUF'
-    model_type = 'LFM'
+    # model_type = 'LFM'
     test_size = 0.1
     run_model(model_type, dataset_name, test_size, False)
     main_time.finish()

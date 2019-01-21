@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: fuxuemingzhu 
-@contact: fuxuemingzhu@163.com
-@site: www.fuxuemingzhu.me
+@site: www.fuxuemingzhu.cn
 
 @file: most_popular.py
 @time: 18-4-17 下午6:50
@@ -75,9 +74,6 @@ class MostPopular:
                 or not self.movie_count or not self.movie_popular_sort:
             raise NotImplementedError('MostPopular has not init or fit method has not called yet.')
         N = self.n_rec_movie
-        if user not in self.trainset:
-            print('The user (%s) not in trainset.' % user)
-            return
         # Recommend N most popular movies for the user.
         predict_movies = list()
         watched_movies = self.trainset[user]

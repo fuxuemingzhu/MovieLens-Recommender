@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: fuxuemingzhu 
-@contact: fuxuemingzhu@163.com
-@site: www.fuxuemingzhu.me
+@site: www.fuxuemingzhu.cn
 
 @file: random_pred.py
 @time: 18-4-17 下午5:48
@@ -71,9 +70,6 @@ class RandomPredict:
             raise NotImplementedError('RandomPredict has not init or fit method has not called yet.')
         N = self.n_rec_movie
         predict_movies = list()
-        if user not in self.trainset:
-            print('The user (%s) not in trainset.' % user)
-            return
         watched_movies = self.trainset[user]
         # Random recommend N movies for the user.
         while len(predict_movies) < N:

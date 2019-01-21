@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: fuxuemingzhu 
-@contact: fuxuemingzhu@163.com
-@site: www.fuxuemingzhu.me
+@site: www.fuxuemingzhu.cn
 
 @file: LFM.py
 @time: 18-6-19 下午2:38
