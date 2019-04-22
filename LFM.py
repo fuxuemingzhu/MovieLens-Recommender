@@ -62,9 +62,9 @@ class LFM:
         self.P = dict()
         self.Q = dict()
         for user in users_set:
-            self.P[user] = [random.random() for _ in range(K)]
+            self.P[user] = [random.random()/math.sqrt(K) for _ in range(K)]
         for item in items_set:
-            self.Q[item] = [random.random() for _ in range(K)]
+            self.Q[item] = [random.random()/math.sqrt(K) for _ in range(K)]
 
     def init_users_items_set(self, trainset):
         """
