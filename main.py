@@ -45,7 +45,8 @@ def run_model(model_name, dataset_name, test_size=0.3, clean=False):
     elif model_name == 'ItemCF-IUF':
         model = ItemBasedCF(use_iuf_similarity=True)
     elif model_name == 'LFM':
-        model = LFM(10, 10, 0.1, 0.01, 10)
+        # K, epochs, alpha, lamb, n_rec_movie
+        model = LFM(10, 20, 0.1, 0.01, 10)
     else:
         raise ValueError('No model named ' + model_name)
     model.fit(trainset)
